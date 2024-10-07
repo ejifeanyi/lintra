@@ -23,6 +23,14 @@ exports.protect = async (req, res, next) => {
 		next();
 	} catch (error) {
 		console.error(error);
+
+		// Handle token expiration
+		if (error.name === "TokenExpiredError") {
+			return res
+				.status(401)
+				.json({ message: "Token has expired, please log in again." });
+		}
+
 		res.status(401).json({ message: "Not authorized, token failed" });
 	}
 };
